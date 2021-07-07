@@ -1,0 +1,2 @@
+"0","names=c('zeroIndex', 'oneIndex', 'twoIndex', 'ThreeIndex')"
+"0","text(v, labels=names, cex=0.7, pos=3, col=""blue"")"

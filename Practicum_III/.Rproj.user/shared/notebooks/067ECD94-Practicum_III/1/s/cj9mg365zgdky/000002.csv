@@ -1,0 +1,8 @@
+"0","
+-- load the dimension tables
+    
+INSERT INTO IssnDim
+(issn, issn_type, title, iso_abbreviation)
+  SELECT issn, issn_type, title, iso_abbreviation FROM Journal;
+
+"

@@ -1,0 +1,10 @@
+"0","CREATE TABLE IF NOT EXISTS attribute (
+  attributeType VARCHAR(20) NOT NULL,
+  akas_id INT NOT NULL,
+  PRIMARY KEY (attributeType, akas_id),
+  CONSTRAINT FK_alternativeMovieTitle_attribute
+    FOREIGN KEY (akas_id)
+    REFERENCES alternativeMovieTitle (akas_id)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

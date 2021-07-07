@@ -1,0 +1,11 @@
+"0","CREATE TABLE IF NOT EXISTS title (
+  tconst VARCHAR(15) NOT NULL,
+  titleType VARCHAR(15),
+  primaryTitle VARCHAR(30),
+  originalTitle VARCHAR(30),
+  isAdult TINYINT,
+  startYear INT,
+  endYear INT,
+  runtimeMinutes INT,
+  PRIMARY KEY (tconst)
+);"

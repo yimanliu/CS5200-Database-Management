@@ -1,0 +1,14 @@
+"0","CREATE TABLE IF NOT EXISTS alternativeTitle (
+  tconst VARCHAR(15),
+  ordering INT,
+  title VARCHAR(30),
+  region VARCHAR(30),
+  language VARCHAR(30),
+  isOriginalTitle TINYINT,
+  PRIMARY KEY (tconst, ordering),
+  CONSTRAINT FK_title_alternativeTitle
+    FOREIGN KEY (tconst)
+    REFERENCES title (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

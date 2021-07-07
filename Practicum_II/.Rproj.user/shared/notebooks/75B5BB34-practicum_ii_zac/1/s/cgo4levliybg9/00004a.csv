@@ -1,0 +1,8 @@
+"0","secs <- c(64.174,0.371 )"
+"0","barplot(secs,"
+"0","main = ""The execution time of the query"","
+"0","xlab = ""Query"","
+"0","ylab = ""Duration in seconds"","
+"0","ylim = c(0,70),"
+"0","names.arg = c(""Before adding Index"", ""After adding Index""),"
+"0","col = ""lightblue"")"

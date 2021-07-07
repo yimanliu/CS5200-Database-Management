@@ -1,0 +1,20 @@
+"0","CREATE TABLE IF NOT EXISTS principalCrew (
+  crew_id INT NOT NULL,
+  tconst VARCHAR(15) NULL,
+  ordering INT NULL,
+  nconst VARCHAR(15) NULL,
+  category VARCHAR(45) NULL,
+  job VARCHAR(45) NULL,
+  characters VARCHAR(45) NULL,
+  PRIMARY KEY (crew_id),
+  CONSTRAINT tconst
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT nconst
+    FOREIGN KEY (nconst)
+    REFERENCES person (nconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

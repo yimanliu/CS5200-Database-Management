@@ -1,0 +1,15 @@
+"0","CREATE TABLE IF NOT EXISTS alternativeMovieTitle (
+  akas_id INT NOT NULL,
+  tconst VARCHAR(15),
+  ordering INT,
+  title VARCHAR(30),
+  region VARCHAR(30),
+  language VARCHAR(30),
+  isOriginalTitle TINYINT,
+  PRIMARY KEY (akas_id),
+  CONSTRAINT FK_movieTitle_alternativeMovieTitle
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

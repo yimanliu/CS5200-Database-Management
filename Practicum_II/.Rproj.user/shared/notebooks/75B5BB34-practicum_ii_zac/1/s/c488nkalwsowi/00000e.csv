@@ -1,0 +1,4 @@
+"0","# number of seasons under 15"
+"0","ggplot(df, aes(numberOfSeasons)) +"
+"0","  geom_bar() +"
+"0","  xlim(0, 15)"

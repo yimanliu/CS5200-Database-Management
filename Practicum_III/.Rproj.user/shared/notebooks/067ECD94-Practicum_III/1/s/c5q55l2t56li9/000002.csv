@@ -1,0 +1,6 @@
+"0","
+-- create the dimension tables and load the dimension tables
+
+CREATE TABLE AuthorListDim
+  AS SELECT article_id, author_id FROM ArticleAuthor;
+"

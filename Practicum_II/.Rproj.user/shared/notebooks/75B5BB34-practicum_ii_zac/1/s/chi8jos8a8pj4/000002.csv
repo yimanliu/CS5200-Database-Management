@@ -1,0 +1,11 @@
+"0","CREATE TABLE IF NOT EXISTS rating (
+  tconst VARCHAR(15) NOT NULL,
+  averageRating FLOAT NULL,
+  numVotes INT NULL,
+  PRIMARY KEY (tconst),
+  CONSTRAINT FK_movieTitle_rating
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

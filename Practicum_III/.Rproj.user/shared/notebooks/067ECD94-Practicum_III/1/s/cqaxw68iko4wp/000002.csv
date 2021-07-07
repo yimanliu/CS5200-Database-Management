@@ -1,0 +1,4 @@
+"0","-- Simple query of number of publications by journal by using JournalFact
+SELECT pub_period, COUNT(*) as numOfPublication 
+FROM JournalFact 
+GROUP BY pub_period;"

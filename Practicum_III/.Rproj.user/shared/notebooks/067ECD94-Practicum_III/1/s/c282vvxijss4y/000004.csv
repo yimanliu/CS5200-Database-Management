@@ -1,0 +1,21 @@
+"0","
+
+-- create the fact table
+
+CREATE TABLE ArticleFact(
+  pmid NUMERIC NOT NULL PRIMARY KEY,
+  pub_model TEXT CHECK(pub_model IN ('Print', 'Print-Electronic', 'Electronic', 'Electronic-Print', 'Electronic-eCollection')),
+  title TEXT NOT NULL,
+  pagination TEXT,
+  abstract_copyright_info TEXT,
+  author_list_complete BOOLEAN NOT NULL,
+  language TEXT NOT NULL,
+  article_date_id NUMERIC NOT NULL,
+  journal_dim_id INTEGER NOT NULL,
+  article_pub_quater TEXT,
+  article_pub_year TEXT,
+  FOREIGN KEY(article_date_id) REFERENCES ArticleDateDim(article_date_id),
+  FOREIGN KEY(journal_dim_id) REFERENCES JournalDim(journal_dim_id)
+  
+);
+"

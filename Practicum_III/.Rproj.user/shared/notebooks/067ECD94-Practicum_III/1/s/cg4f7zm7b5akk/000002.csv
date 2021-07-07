@@ -1,0 +1,7 @@
+"0","
+-- create the dimension tables and load the dimension tables
+
+CREATE TABLE AuthorDim
+  AS SELECT author_id, valid, last_name, fore_name, initials, affiliation FROM
+  Author;
+"

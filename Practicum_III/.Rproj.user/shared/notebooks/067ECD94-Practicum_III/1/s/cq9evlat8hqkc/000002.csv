@@ -1,0 +1,12 @@
+"0","
+-- create the dimension tables and load the dimension tables
+
+CREATE TABLE ArticleDateDim(
+  article_date_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  year TEXT,
+  month TEXT,
+  day TEXT,
+  quarter TEXT
+);
+
+"

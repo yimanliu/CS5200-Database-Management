@@ -1,0 +1,15 @@
+"0","
+-- load the dimension tables
+INSERT INTO JournalPubDateDim
+  (year, month, quarter)
+    SELECT substr(pub_date,1,4) AS year,
+    substr(pub_date,6,3) AS month,
+    
+    CASE
+        WHEN substr(pub_date,6,3) IN (""Jan"", ""Feb"", ""Mar"" ) THEN ""Q1""
+        WHEN substr(pub_date,6,3) IN (""Apr"", ""May"", ""Jun"" ) THEN ""Q2""
+        WHEN substr(pub_date,6,3) IN (""Jul"", ""Aug"", ""Sep"" ) THEN ""Q3""
+        WHEN substr(pub_date,6,3) IN (""Oct"", ""Nov"", ""Dec"" ) THEN ""Q4""
+        ELSE NULL
+    END AS quarter
+    FROM ArticleJournal;"

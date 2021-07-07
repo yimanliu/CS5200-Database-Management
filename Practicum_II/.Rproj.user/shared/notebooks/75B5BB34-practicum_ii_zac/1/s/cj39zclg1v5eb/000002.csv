@@ -1,0 +1,16 @@
+"2","Error: nanodbc/nanodbc.cpp:1655: 00000: [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.20]You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable) 
+<SQL> 'CREATE TRIGGER person_BEFORE_INSERT BEFORE INSERT ON person 
+FOR EACH ROW
+BEGIN
+    DECLARE numOfMovies INT;
+    
+    SELECT tconst, COUNT(*) INTO numOfMovies
+    FROM principalCrew 
+    WHERE principalCrew.nconst = NEW.nconst
+    GROUP BY principalCrew.nconst;
+    
+    SET new.age = YEAR(CURDATE()) - new.birthYear;
+    SET new.numOfMoviesAppeared = numOfMovies;
+END; '
+"
+"2","Failed to execute SQL chunk"

@@ -1,0 +1,4 @@
+"0","dbAppendTable(con, 'JournalDim', journaldim_df_part_2)"
+"2","Error in sqlRownamesToColumn(values[0, , drop = FALSE], row.names) : 
+  object 'journaldim_df_part_2' not found
+"

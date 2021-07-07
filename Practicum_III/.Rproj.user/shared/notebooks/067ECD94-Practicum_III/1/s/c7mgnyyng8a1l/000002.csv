@@ -1,0 +1,8 @@
+"0","library(XML)"
+"2","Warning message:
+"
+"2","In result_fetch(res@ptr, n = n) :"
+"2","
+ "
+"2"," SQL statements must be issued with dbExecute() or dbSendStatement() instead of dbGetQuery() or dbSendQuery().
+"

@@ -1,0 +1,8 @@
+"0","CREATE TABLE If NOT EXISTS Author (
+  author_id     TEXT    NOT NULL PRIMARY KEY,
+  valid         BOOLEAN NOT NULL,
+  last_name     TEXT    NOT NULL,
+  fore_name     TEXT    NOT NULL,
+  initials      TEXT,
+  affiliation   TEXT
+);"

@@ -1,0 +1,5 @@
+"0",""
+"0","print(df_article_fact_part_2)"
+"2","Error in print(df_article_fact_part_2) : 
+  object 'df_article_fact_part_2' not found
+"

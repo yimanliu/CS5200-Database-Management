@@ -1,0 +1,5 @@
+"0","# get the data from table to dataframe"
+"0",""
+"0","journal_issn_result_part_2<-dbGetQuery(con,""SELECT journal_issn FROM ArticleJournal"")"
+"0",""
+"0","print(journal_issn_result_part_2)"

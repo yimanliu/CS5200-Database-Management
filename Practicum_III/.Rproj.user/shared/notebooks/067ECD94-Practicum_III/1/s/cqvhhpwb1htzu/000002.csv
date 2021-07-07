@@ -1,0 +1,17 @@
+"0","
+-- load the ArticleDateDim Table
+INSERT INTO ArticleDateDim
+  (year, month, day, quarter)
+  SELECT substr(article_date,1,4) AS year,
+    substr(article_date, 6,2) AS month,
+    substr(article_date,9,2) AS day,
+      CASE
+        WHEN strftime(""%m"", article_date) BETWEEN ""01"" AND ""03"" THEN ""Q1""
+        WHEN strftime(""%m"", article_date) BETWEEN ""04"" AND ""06"" THEN ""Q2""
+        WHEN strftime(""%m"", article_date) BETWEEN ""07"" AND ""09"" THEN ""Q3""
+        WHEN strftime(""%m"", article_date) BETWEEN ""10"" AND ""12"" THEN ""Q4""
+        ELSE NULL
+        END as quarter
+    
+    FROM Article;
+"

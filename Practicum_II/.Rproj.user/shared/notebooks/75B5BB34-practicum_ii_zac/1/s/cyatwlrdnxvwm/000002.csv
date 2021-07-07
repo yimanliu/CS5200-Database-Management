@@ -1,0 +1,10 @@
+"0","CREATE TABLE IF NOT EXISTS genre (
+  tconst VARCHAR(15) NOT NULL,
+  genreType VARCHAR(45) NOT NULL,
+  PRIMARY KEY (tconst, genreType),
+  CONSTRAINT FK_movieTitle_genre
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

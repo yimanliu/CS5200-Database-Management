@@ -1,0 +1,4 @@
+"2","Error: nanodbc/nanodbc.cpp:1655: 00000: [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.20]Cannot drop table 'alternativeMovieTitle' referenced by a foreign key constraint 'FK_alternativeMovieTitle_movieType' on table 'movieType'. 
+<SQL> 'DROP TABLE alternativeMovieTitle;'
+"
+"2","Failed to execute SQL chunk"

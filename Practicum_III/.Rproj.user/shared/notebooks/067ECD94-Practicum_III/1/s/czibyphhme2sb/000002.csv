@@ -1,0 +1,7 @@
+"0","CREATE TABLE If NOT EXISTS ArticleAuthor (
+  article_id    NUMERIC NOT NULL,
+  author_id     TEXT    NOT NULL,
+  PRIMARY KEY (article_id, author_id),
+  FOREIGN KEY(article_id) REFERENCES Article(pmid),
+  FOREIGN KEY(author_id)  REFERENCES Author(author_id)
+);"

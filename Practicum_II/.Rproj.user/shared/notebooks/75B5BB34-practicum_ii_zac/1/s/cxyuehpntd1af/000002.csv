@@ -1,0 +1,2 @@
+"0","-- disable safe update mode
+SET SQL_SAFE_UPDATES = 0;"

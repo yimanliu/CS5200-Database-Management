@@ -1,0 +1,8 @@
+"0","CREATE TABLE If NOT EXISTS History (
+  history_id    TEXT    NOT NULL PRIMARY KEY,
+  article_id    NUMERIC NOT NULL,
+  pub_status    TEXT    CHECK(pub_status IN ('received', 'accepted', 'epublish', 'ppublish', 'revised', 'aheadofprint',
+  'retracted', 'ecollection', 'pmc', 'pmcr', 'pubmed', 'pubmedr', 'premedline', 'medline', 'medliner', 'entrez', 'pmc-release')),
+  pub_date      DATE    NOT NULL,
+  FOREIGN KEY(article_id) REFERENCES Article(pmid)
+);"

@@ -1,0 +1,3 @@
+"0","ylim = c(0,70)"
+"0","text(secs, labels=secs, cex=1, pos=3, col=""black"")"
+"0",""

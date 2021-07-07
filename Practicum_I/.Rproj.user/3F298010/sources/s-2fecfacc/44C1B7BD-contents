@@ -1,0 +1,199 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+# Tasks
+1. (10 pts / 1 hr) Install MySQL using the instructions provided in the practicum. If you have difficulty installing MySQL, you may do the practicum with SQLite instead but you will lose 10 points.
+
+
+
+2. (10 pts / 2 hrs) Create an R or Jupyter Notebook, Markdown document, or other document (e.g., Word) to track all of your work, including all diagrams (embed them as JPG from tool screen shots). Keep updating this notebook as you complete tasks. The time provided here is cumulative and to learn how to use journaling in data analysis work. We recommend that you learn and use R Notebooks.
+
+
+
+3. (10 pts / 2 hrs) Analyze the problem of contact tracing and create a conceptual model in UML using a tool of your choice (e.g., LucidChart, Enterprise Architect, ArgoUML, Visual Paradigm, ERwin, TOAD) as discussed during class and provided in the references and resources below. Additional requirements and clarifications will be provided in the Practicums channel on Teams. Choose one or two specific use cases and build the model to accommodate them, e.g., find all contacts that an infected person had since their last negative test. The diagram must contain at least eight classes, and must show generalization hierarchies, aggregations and composition relationships as appropriate -- justify when you use them or tell us why you wouldn't use them. All relationships, except generalization, must have full multiplicity constraints and labeled as appropriate. Classes must have proper names, descriptions, and attributes with domain types. Key attributes and derived attributes must be marked (with the «key» stereotype). Foreign keys are not shown in a UML model. Limit yourself to two to three use cases and build the model for those, e.g., track infected patients, find contacts who may have been infected by an infected patient, alert contact of a potential infection. This is a large problem domain; don't build a model with more than 20 entities but 8-12 is sufficient.
+
+
+
+4. (10 pts / 1 hr) From the Conceptual Model, construct a logical data model expressed as an ERD using IE (Crow's Foot) and a tool of your choice that is in at least BCNF. The logical data model may not have any many-to-many relationships, so introduce association entities as needed. The number of tables is very likely larger than the number of entities in the conceptual model as you resolve many-to-many relationships, generalization hierarchies, enumerations, and multi-valued attributes.
+
+
+
+5. (20 pts / 1.5 hrs) Create a set of SQL data definition statements for the above model and realize that schema in MySQL by executing the script from the MySQL console or via R. Show that the tables were created and conform to the constraints through screen shots or other means.
+
+```sql
+CREATE TABLE Hospital (
+  HospitalId INT NOT NULL,
+  Name VARCHAR(45),
+  Address VARCHAR(45),
+  Phone VARCHAR(20),
+  PRIMARY KEY (HospitalId)
+)
+COMMENT = 'Health center for connecting with patients and contacts.';
+
+
+CREATE TABLE MedicalProvider (
+  MedicalProviderId INT NOT NULL,
+  Title VARCHAR(20),
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  HospitalId INT NOT NULL,
+  PRIMARY KEY (MedicalProviderId),
+  FOREIGN KEY (HospitalId)
+    REFERENCES Hospital(HospitalId)
+)
+COMMENT = 'Doctor who diagnosis patients.';
+
+
+CREATE TABLE Employee (
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  Phone INT,
+  PRIMARY KEY (EmployeeId)
+)
+COMMENT = 'Employee from health department who is responsible for contacting patients and contact.';
+
+
+CREATE TABLE Person (
+  PersonId INT NOT NULL,
+  MedicalProviderId INT,
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  DOB DATE,
+  Gender ENUM('male', 'female'),
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Phone VARCHAR(45),
+  Email VARCHAR(45),
+  SMS VARCHAR(45),
+  DateOfStartQuarantine DATE,
+  SourceOfInfection VARCHAR(45),
+  RiskLevel INT,
+  PRIMARY KEY (PersonId),
+  FOREIGN KEY (MedicalProviderId)
+    REFERENCES MedicalProvider(MedicalProviderId),
+  FOREIGN KEY (EmployeeId)
+    REFERENCES Employee(EmployeeId)
+)
+COMMENT = 'Either a test positive patient or a potiential patient who contacts with a patient';
+
+
+CREATE TABLE Notification (
+  NotificationId INT NOT NULL,
+  PersonId INT NOT NULL,
+  NotificationType VARCHAR(45),
+  NotificationDate DATE,
+  Detail VARCHAR(45),
+  PRIMARY KEY (NotificationId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person (PersonId)
+)
+COMMENT = 'Both patients and contacts will receive notification based on their health condition.';
+
+
+CREATE TABLE Event (
+  EventId INT NOT NULL,
+  EventDate DATE,
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Detail VARCHAR(45),
+  PRIMARY KEY (EventId)
+)
+COMMENT = 'The event that patients and contacts attend.';
+
+
+CREATE TABLE PersonEvent (
+  PersonId INT NOT NULL,
+  EventId INT NOT NULL,
+  PRIMARY KEY (PersonId, EventId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId),
+  FOREIGN KEY (EventId)
+    REFERENCES Event(EventId)
+);
+
+
+CREATE TABLE SupportiveServices (
+  SupportiveServicesId INT NOT NULL,
+  Title VARCHAR(45),
+  PRIMARY KEY (SupportiveServicesId)
+)
+COMMENT = 'Both patients and contacts will get support services during their quarantine if they face any inconvenience.';
+
+
+CREATE TABLE ServicesPerson (
+  SupportiveServicesId INT NOT NULL,
+  PersonId INT NOT NULL,
+  PRIMARY KEY (SupportiveServicesId, PersonId),
+  FOREIGN KEY (SupportiveServicesId)
+    REFERENCES SupportiveServices(SupportiveServicesId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+);
+
+
+CREATE TABLE SelfReport (
+  ReportId INT NOT NULL,
+  PersonId INT NOT NULL,
+  ReportDate DATE,
+  Temperature INT,
+  ProtectiveBehavior VARCHAR(45),
+  Quarantined TINYINT,
+  PRIMARY KEY (ReportId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+)
+COMMENT = 'Daily data report such as temperature data, contact data.';
+
+
+CREATE TABLE TestResult (
+  TestResultId INT NOT NULL,
+  ReportId INT NOT NULL,
+  Description VARCHAR(45),
+  Positive TINYINT,
+  PRIMARY KEY (TestResultId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'If the test result is positive, which means this patient / contacts is diagnosed with Covid-19.';
+
+
+CREATE TABLE Symptom (
+  SymptomId INT NOT NULL,
+  ReportId INT NOT NULL,
+  DateOfSymptomOnset DATE,
+  SymptomDetail VARCHAR(45),
+  PRIMARY KEY (SymptomId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'Symptom description.';
+
+```
+
+6. (20 pts / 2 hrs) Work as a group to populate the tables with test data. You may exchange data with other groups. You may also use a data generation resource such as https://www.generatedata.com/ (Links to an external site.).
+
+
+
+7. (20 pts / 1 hrs) Define and execute at least five queries that demonstrate that your database is working. At least one query must contain a join of at least three tables, one must contain a subquery, one must be a group by with a having clause, and one must contain a complex search criterion using AND, OR, or LIKE. And finally one must use an advanced query mechanisms such as RCTE, PARTITION BY, or SELECT CASE/WHEN.
+

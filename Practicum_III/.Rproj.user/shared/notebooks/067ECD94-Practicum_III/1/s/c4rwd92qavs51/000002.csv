@@ -1,0 +1,8 @@
+"0","CREATE TABLE If NOT EXISTS AbstractText (
+  abstract_id    TEXT     NOT NULL PRIMARY KEY,
+  article_id      NUMERIC NOT NULL,
+  label           TEXT,
+  nlm_category    TEXT    CHECK(nlm_category IN ('BACKGROUND', 'OBJECTIVE', 'METHODS', 'RESULTS', 'CONCLUSIONS', 'UNASSIGNED')),
+  abstract_text   TEXT    NOT NULL,
+  FOREIGN KEY(article_id) REFERENCES Article(pmid)
+);"

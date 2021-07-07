@@ -1,0 +1,4 @@
+"2","Error: nanodbc/nanodbc.cpp:1655: 00000: [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.20]You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER $$' at line 1 
+<SQL> 'DELIMITER $$'
+"
+"2","Failed to execute SQL chunk"

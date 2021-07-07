@@ -1,0 +1,10 @@
+"0","CREATE TABLE If NOT EXISTS Article (
+  pmid                      NUMERIC NOT NULL PRIMARY KEY,
+  pub_model                 TEXT    CHECK(pub_model IN ('Print', 'Print-Electronic', 'Electronic', 'Electronic-Print', 'Electronic-eCollection')),
+  title                     TEXT    NOT NULL,
+  pagination                TEXT,
+  abstract_copyright_info   TEXT,
+  author_list_complete      BOOLEAN NOT NULL,
+  language                  TEXT    NOT NULL,
+  article_date              DATE
+);"

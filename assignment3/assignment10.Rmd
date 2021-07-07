@@ -1,0 +1,216 @@
+---
+title: "Assignment10"
+author: "Yiman Liu"
+output: html_notebook
+---
+### 1.(25 pts) Create a normalized (BCNF) relational schema and visualize the schema in an ERD for the data in the XML file. Include the ERD in your R Notebook.
+
+![](https://raw.githubusercontent.com/yimanliu0/database/master/image/assignment10.jpeg) 
+
+### 2.(25 pts) Create a SQLite database that implement the schema, i.e., define the tables with CREATE TABLE. Use SQL chunks in your R Notebook.
+
+```{R}
+library(RSQLite)
+
+# connect to the SQLite database in the specified file
+con <- dbConnect(SQLite(), dbname="/Users/liuyiman/database/my_db")
+```
+
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS book (
+  book_id TEXT PRIMARY KEY NOT NULL,
+  title TEXT,
+  edition INTEGER,
+  price INTEGER,
+  publish_date TEXT,
+  description TEXT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS genre (
+  genre_id INTEGER PRIMARY KEY NOT NULL,
+  book_type TEXT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS book_genre (
+  genre_id INTEGER NOT NULL,
+  book_id TEXT NOT NULL,
+  PRIMARY KEY (genre_id, book_id),
+  FOREIGN KEY (genre_id) 
+    REFERENCES genre (genre_id) 
+        ON DELETE RESTRICT 
+        ON UPDATE RESTRICT,
+  FOREIGN KEY (book_id) 
+    REFERENCES book (book_id) 
+        ON DELETE RESTRICT 
+        ON UPDATE RESTRICT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS author (
+  author_id INTEGER PRIMARY KEY NOT NULL,
+  name TEXT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS book_author (
+  author_id INTEGER NOT NULL,
+  book_id TEXT NOT NULL,
+  PRIMARY KEY (author_id, book_id),
+  FOREIGN KEY (author_id) 
+    REFERENCES author (author_id) 
+        ON DELETE RESTRICT 
+        ON UPDATE RESTRICT,
+  FOREIGN KEY (book_id) 
+    REFERENCES book (book_id) 
+        ON DELETE RESTRICT 
+        ON UPDATE RESTRICT
+);
+```
+
+### 3.(25 pts) Load the XML data from the file into R data frames; you will need to use either node-by-node traversal of the XML tree or a combination of node-by-node traversal with XPath; you likely will not be able to accomplish it with only XPath. Use surrogate keys and/or the ID attributes in the XML.
+
+```{R}
+library(XML)
+doc = xmlParse(file = "Books-v3.xml")
+df <- xmlToDataFrame(doc)
+
+library(XML)
+library(methods)
+
+# load xml file into R
+data = xmlParse(file = "Books-v3.xml")
+book_id_data <- xpathSApply(data, "/catalog/book/@id")
+df$book_id = book_id_data
+
+df <- df[c("book_id", "author", "title", "genre", "price", "publish_date", "description", "edition")]
+print(df)
+```
+
+### 4.(25 pts) Transform data types as necessary and then write the data frames to the appropriate tables in the database.
+
+```{R}
+library(dplyr)
+library(magrittr)
+# change data type
+df %<>%
+  mutate(publish_date= as.Date(publish_date))
+df %<>%
+  mutate(edition= as.numeric(edition))
+df %<>%
+  mutate(price= as.numeric(price))
+print(df)
+```
+
+```{R}
+# loading data from dataframe into book table
+for(i in 1:nrow(df)){   
+  write_sql <- paste("Insert into book (book_id, title, edition, price, publish_date, description) values (", '"', df[i, "book_id"], '"', ",", '"', df[i, "title"], '"', ",", '"', df[i, "edition"], '"', ",", '"', df[i, "price"], '"', ",", '"', df[i, "publish_date"], '"', ",", '"', df[i, "description"], '"', ")",seq = "") 
+  dbSendQuery(con, write_sql)
+}
+```
+
+```{R}
+x <- data.frame(c(df["author"]))
+x <- unique(x)
+```
+
+```{R}
+# loading data from dataframe into author table
+for(i in 1:nrow(x)){   
+  write_sql <- paste("Insert into author (name) values (", '"', x[i, "author"], '"', ")",seq = "") 
+  dbSendQuery(con, write_sql)
+}
+```
+
+```{R}
+# loading data from dataframe into bridge table (book_author)
+book_author <- data.frame(
+  author_id = c(1,2,3,3,3,4,5,6,7,8,5,9,9,9,5,3),
+  book_id = c(df["book_id"])
+)
+# loading data from dataframe into book_author table
+for(i in 1:nrow(book_author)){   
+  write_sql <- paste("Insert into book_author (author_id, book_id) values (", book_author[i, "author_id"], ",", '"', book_author[i, "book_id"], '"', ")",seq = "") 
+  dbSendQuery(con, write_sql)
+}
+```
+
+```{R}
+y <- data.frame(c(df["genre"]))
+y <- unique(y)
+```
+
+```{R}
+# loading data from dataframe into genre table
+for(i in 1:nrow(y)){   
+  write_sql <- paste("Insert into genre (book_type) values (", '"', y[i, "genre"], '"', ")",seq = "") 
+  dbSendQuery(con, write_sql)
+}
+```
+
+```{R}
+# loading data from dataframe into bridge table (book_genre)
+book_genre <- data.frame(
+  genre_id = c(1,2,2,2,2,3,1,3,4,5,1,1,1,1,1,2),
+  book_id = c(df["book_id"])
+)
+# loading data from dataframe into book_genre table
+for(i in 1:nrow(book_genre)){   
+  write_sql <- paste("Insert into book_genre (genre_id, book_id) values (", book_genre[i, "genre_id"], ",", '"', book_genre[i, "book_id"], '"', ")",seq = "") 
+  dbSendQuery(con, write_sql)
+}
+```
+
+### 5.(25 pts) Once the data from the XML is in the database, build SQL chunks for the following queries:
+
+ - **What are the titles and prices of all books written by "Galos, Mike"? List the titles and the prices.** 
+
+```{sql, connection=con}
+SELECT title, price FROM book
+INNER JOIN book_author ON book.book_id = book_author.book_id
+INNER JOIN author ON author.author_id = book_author.author_id
+WHERE author.name LIKE "%Galos, Mike%";
+```
+
+ - **What is the most recent year of publication of all books written by "O'Brien, Tim".**  
+ 
+```{sql, connection=con}
+SELECT MAX(publish_date) as mostRecentYear FROM book
+INNER JOIN book_author ON book.book_id = book_author.book_id
+INNER JOIN author ON author.author_id = book_author.author_id
+WHERE author.name LIKE "%O'Brien, Tim%";
+```
+ - **What is the average price of all books in the "Fantasy" genre.**  
+ 
+```{sql, connection=con}
+SELECT AVG(price) as averagePrice FROM book
+INNER JOIN book_genre ON book.book_id = book_genre.book_id
+INNER JOIN genre ON genre.genre_id = book_genre.genre_id
+WHERE genre.book_type LIKE "%Fantasy%";
+```
+ - **Find the number of books in each genre.**
+ 
+```{sql, connection=con}
+SELECT book_type, COUNT(*) as cnt FROM book
+INNER JOIN book_genre ON book.book_id = book_genre.book_id
+INNER JOIN genre ON genre.genre_id = book_genre.genre_id
+GROUP BY book_type;
+```
+ - **List the title and author of all books that cost less than the average price of books.**
+
+```{sql, connection=con}
+SELECT title, name as author FROM book
+INNER JOIN book_author ON book.book_id = book_author.book_id
+INNER JOIN author ON author.author_id = book_author.author_id
+WHERE book.price < (
+  SELECT AVG(price) FROM book
+);
+```
+

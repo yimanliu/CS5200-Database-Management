@@ -1,0 +1,7 @@
+"0","CREATE TABLE If NOT EXISTS Journal (
+  issn              TEXT NOT NULL PRIMARY KEY,
+  issn_type         TEXT NOT NULL,
+  title             TEXT NOT NULL,
+  iso_abbreviation  TEXT NOT NULL
+);
+"

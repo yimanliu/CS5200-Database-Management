@@ -1,0 +1,15 @@
+"0","CREATE TABLE IF NOT EXISTS writerWithMovie (
+  tconst VARCHAR(15) NOT NULL,
+  nconst VARCHAR(15) NOT NULL,
+  PRIMARY KEY (tconst, nconst),
+  CONSTRAINT FK_movieTitle_writerWithMovie
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT FK_person_writerWithMovie
+    FOREIGN KEY (nconst)
+    REFERENCES person (nconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

@@ -1,0 +1,231 @@
+---
+title: "Practicum II"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+## Tasks
+
+* (0 pts / 60 min) Inspect and then download IMDB movie data from https://www.imdb.com/interfaces/ (Links to an external site.). Read the descriptions of the data subsets and then download the compressed (gz) tab-separated files (tsv). If you cannot access the link, use this Canvas resource.
+
+* (10 pts) Read the data description and inspect the files, then:
+
+  * (5 pts / 60 min) create a data model in the form of an ERD in Crow's Foot notation using a tool of your choice (e.g., LucidChart, TOAD, MySQL Workbench, etc.) and embed an image of the model in your notebook.  
+  
+  * [ERD in LucidChart](https://lucid.app/invitations/accept/5f7a9eba-0a39-49bf-b32e-41dba8cf6f64)
+
+  * (4 pts / 15 min) add junction/association tables to normalize many-to-many relationships, normalize multi-valued attributes, and create lookup tables for categorical attribute values. Embed an updated image of the model in your notebook.  
+  
+  * [ERD in LucidChart in BCNF](https://lucid.app/invitations/accept/537ce00b-b074-48cc-be17-0dbd680d582f)  
+  **_Note: not sure if the look up table is correct!_**
+  
+  * (1 pts / 5 min) add two new attributes (columns) to the appropriate tables: one for the age of a person and one for the number of movies a person has appeared in. Embed an updated image of the model in your notebook. Leave those columns empty for now. They will be filled in later.  
+  
+  * **Save link as above, but update 'person' table**
+
+  * (2 pts / 10 min) ensure that the relational model is in at least BCNF. 
+  
+  * **There is no many-to-many relationships and multi-valued attributes in this relational model.**  
+  **There is no multi-valued attributes in each table, so it is in 1NF.**  
+  **There is no non-key value depending on part of key, so it is in 2NF.**  
+  **There is no non-key attribute can decide primary key attribute, so it is in BCNF.**
+
+* (8 pts / 60 min) Create and then run CREATE TABLE statements to build the schema. These statements must run from within your notebook and not from a separate script. Ensure proper referential integrity.
+
+```{R}
+# load libraries
+library(DBI)
+library(odbc)
+library(ggplot2)
+
+# connect to mysql
+con <- DBI::dbConnect(odbc::odbc(),
+                      Driver   = "MySQL",
+                      Server   = "cs5200.cerugoc9p5ux.us-east-1.rds.amazonaws.com",
+                      Database = "practicum-ii",
+                      UID      = "admin",
+                      PWD      = "cs5200db",
+                      Port     = 3306)
+```
+
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS movieTitle (
+  tconst VARCHAR(15) NOT NULL,
+  titleType VARCHAR(15),
+  primaryTitle VARCHAR(30),
+  originalTitle VARCHAR(30),
+  isAdult TINYINT,
+  movieTitlecol VARCHAR(45),
+  startYear INT,
+  endYear INT,
+  runtimeMinutes INT,
+  PRIMARY KEY (tconst)
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS alternativeMovieTitle (
+  akas_id INT NOT NULL,
+  tconst VARCHAR(15),
+  ordering INT,
+  title VARCHAR(30),
+  region VARCHAR(30),
+  attributes VARCHAR(100),
+  isOriginalTitle TINYINT,
+  PRIMARY KEY (akas_id),
+  CONSTRAINT tconst
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS person (
+  nconst VARCHAR(15) NOT NULL,
+  primaryName VARCHAR(45),
+  birthYear INT,
+  deathYear INT,
+  age INT,
+  numOfMoviesAppeared INT,
+  PRIMARY KEY (nconst)
+);
+```
+
+```{sql, connection=con}
+DROP TABLE principalCrew;
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS principalCrew (
+  crew_id INT NOT NULL,
+  tconst VARCHAR(15),
+  ordering INT,
+  nconst VARCHAR(15),
+  category VARCHAR(45),
+  job VARCHAR(45),
+  characters VARCHAR(45),
+  PRIMARY KEY (crew_id),
+  CONSTRAINT nconst
+    FOREIGN KEY (nconst)
+    REFERENCES person (nconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);
+```
+
+```{sql, connection=con}
+CREATE TABLE IF NOT EXISTS episode (
+  tconst VARCHAR(15) NOT NULL,
+  parentTconst VARCHAR(15),
+  seasonNumber INT,
+  episodeNumber INT,
+  PRIMARY KEY (tconst),
+  CONSTRAINT tconst
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+);
+```
+
+```{sql, connection=con}
+SHOW TABLES;
+```
+* (10 pts / 120 min) Load the table from the downloaded data files into the tables. Properly parse the foreign keys and attributes and ensure that the data is in the right tables in the right form and that referential integrity is ensured. This will require parsing code in your chosen programming language. You should create a subset of each dataset for testing (as the data sets are very large and take significant time to load). What is the effect of the referential integrity checking while you load? Can you do something about that? Describe and implement any improvement strategies.
+
+* (5 pts / 30 min) After loading the data, execute UPDATE statements for the two newly created columns in (2C). You may interpret what appearing in movies means and what you classify as movies -- just make it clear in your notebook.
+
+* (10 pts / 90 min) Add triggers to the appropriate tables so that the newly created columns in (2C) are automatically updated when new data in inserted.
+```{sql, connection=con}
+
+DELIMITER $$
+
+CREATE DEFINER = CURRENT_USER TRIGGER `mydb`.`person_AFTER_INSERT` 
+AFTER INSERT ON `person` FOR EACH ROW
+BEGIN
+    SET NEW.age = YEAR(CURDATE()) - NEW.birthYear;
+    
+    SELECT tconst, COUNT(*) INTO NEW.numOfMoviesAppeared
+    FROM principalCrew 
+    WHERE principalCrew.nconst = NEW.nconst
+    GROUP BY principalCrew.nconst;
+END $$
+
+DELIMITER ;
+
+```
+
+* (8 pts / 60 min) Create a view that lists the name of each actor, their age, whether they are dead or not, and how many movies they are known for.
+```{sql, connection=con}
+
+-- First, create a view containing number of movies a person known for
+CREATE VIEW personKnownForMovie AS
+SELECT nconst, tconst, COUNT(*) AS numOfMoviesKnownFor
+FROM knownForMovie
+GROUP BY nconst;
+
+-- Second, create a table containing isDead attribute
+CREATE TABLE death (
+  nconst VARCHAR(15),
+  deadYear INT,
+  isDead TINYINT
+);
+
+-- Third, create a trriger to set isDead value according to deadYear
+DELIMITER $$
+
+CREATE DEFINER = CURRENT_USER TRIGGER `death_after_insert` 
+AFTER INSERT ON `death` FOR EACH ROW
+BEGIN
+    IF(NEW.deadYear = '\N') THEN
+        SET NEW.isDead = 0;
+    ELSE
+        SET NEW.isDead = 1;
+    END IF;
+END $$
+  
+DELIMITER ;
+
+-- Finally, create a view containing name, age, isDead, numOfMoviesKnownFor
+CREATE VIEW actor AS 
+SELECT person.primaryName,
+       person.age,
+       death.isDead,
+       personKnownForMovie.numOfMoviesKnownFor
+FROM person
+INNER JOIN death
+ON person.nconst = death.nconst
+INNER JOIN personKnownForMovie 
+ON person.nconst = personKnownForMovie.nconst
+INNER JOIN principalCrew
+ON person.nconst = principalCrew.nconst 
+AND principalCrew.category = 'actor';
+
+```
+
+* (9 pts / 90 min) Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot).
+
+* (10 pts / 120 min) Build a function in your code or a stored procedure in the database (approach is your choice) called addActor() that adds a new actor to the database: this requires updating several tables, so the insertions must occur within a transaction in order to function properly in a concurrent environment. Test your function by inserting a new actor -- you may make up a name and associated information. Show evidence in your notebook that the actor was properly inserted.
+
+* (5 pts / 60 min) Build a function in your code or a stored procedure in the database (approach is your choice) called deleteActor() that removes an actor from the database: this requires updating several tables, so the deletions must occur within a transaction in order to function properly in a concurrent environment. Test your function by deleting a new actor inserted in (9) -- show evidence that the removal was successful.
+
+* (10 pts / 45 min) Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV series) which an above average rating. Show the results of the query in your notebook.
+
+* (10 pts / 90 min) Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference and comment on why that's the case.
+
+
+* (5 pts / ongoing) Proper documentation and clean code that is easy to follow. Professional preparation of the work.

@@ -1,0 +1,13 @@
+"0","
+-- create the dimension tables and load the dimension tables
+
+CREATE TABLE IssnDim(
+  issn TEXT NOT NULL PRIMARY KEY,
+  issn_type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  iso_abbreviation TEXT NOT NULL
+
+
+);
+
+"

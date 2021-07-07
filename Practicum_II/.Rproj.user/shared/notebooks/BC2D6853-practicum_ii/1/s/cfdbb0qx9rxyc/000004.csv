@@ -1,0 +1,13 @@
+"2","Error: nanodbc/nanodbc.cpp:1655: 00000: [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.20]Duplicate foreign key constraint name 'tconst' 
+<SQL> 'CREATE TABLE IF NOT EXISTS episode (
+  tconst VARCHAR(15) NOT NULL,
+  parentTconst VARCHAR(15),
+  seasonNumber INT,
+  episodeNumber INT,
+  PRIMARY KEY (tconst),
+  CONSTRAINT tconst
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+);'
+"
+"2","Failed to execute SQL chunk"

@@ -1,0 +1,134 @@
+"0","# load libraries"
+"0","library(data.table)"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","data.table 1.13.2 using 8 threads (see ?getDTthreads).  Latest news: r-datatable.com
+"
+"0","library(R.utils)"
+"2","Loading required package: R.oo
+"
+"2","Loading required package: R.methodsS3
+"
+"2","R.methodsS3 v1.8.1 (2020-08-26 16:20:06 UTC) successfully loaded. See ?R.methodsS3 for help.
+"
+"2","R.oo v1.24.0 (2020-08-26 16:11:58 UTC) successfully loaded. See ?R.oo for help.
+"
+"2","
+Attaching package: ‘R.oo’
+
+"
+"2","The following object is masked from ‘package:R.methodsS3’:
+
+    throw
+
+"
+"2","The following objects are masked from ‘package:methods’:
+
+    getClasses, getMethods
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    attach, detach, load, save
+
+"
+"2","R.utils v2.10.1 (2020-08-26 22:50:31 UTC) successfully loaded. See ?R.utils for help.
+"
+"2","
+Attaching package: ‘R.utils’
+
+"
+"2","The following object is masked from ‘package:utils’:
+
+    timestamp
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    cat, commandArgs, getOption, inherits, isOpen, nullfile, parse, warnings
+
+"
+"0","library(tidyr)"
+"2","
+Attaching package: ‘tidyr’
+
+"
+"2","The following object is masked from ‘package:R.utils’:
+
+    extract
+
+"
+"0","library(dplyr)"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:data.table’:
+
+    between, first, last
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","# get a new connection"
+"0","getConnection <- function() {"
+"0","  con <- dbConnect(MySQL(),"
+"0","                    user = ""admin"","
+"0","                    password = ""cs5200db"","
+"0","                    dbname = ""practicum-ii"","
+"0","                    host = ""cs5200.cerugoc9p5ux.us-east-1.rds.amazonaws.com"","
+"0","                    port = 3306"
+"0","                  )"
+"0","	return(con)"
+"0","}"
+"0",""
+"0","# batch load function"
+"0","batchInsert <- function(tablename, data){"
+"0","  batchsize = 10000"
+"0","  if (nrow(data) >= batchsize) {"
+"0","      batch <- split(data, 1:nrow(data) %/% batchsize)"
+"0","      op <- lapply(batch, function(x) {"
+"0","        ## Make separate connections for each batch"
+"0","        con <- getConnection()"
+"0","        dbAppendTable(con, tablename, x)"
+"0","        dbDisconnect(con)"
+"0","      })"
+"0","  } else {"
+"0","    con <- getConnection()"
+"0","    dbAppendTable(con, tablename, data)"
+"0","    dbDisconnect(con)"
+"0","  }"
+"0","}"
+"0",""
+"0","# load data"
+"0",""
+"0","# title.basics === load"
+"0","titleBasics <- fread(file = 'data/title.basics.tsv.gz', header = TRUE, na.strings='\\N', quote="""")"
+"2","|--------------------------------------------------|
+|"
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="
+"2","="

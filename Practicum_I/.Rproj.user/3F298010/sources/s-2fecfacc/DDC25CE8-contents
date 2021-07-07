@@ -1,0 +1,681 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+
+### Authors:
+- Simin Zhang
+- Yiman Liu
+- Zhi Wen
+
+# Tasks
+1. (10 pts / 1 hr) Install MySQL using the instructions provided in the practicum.
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/mySQL.png">
+
+2. (10 pts / 2 hrs) Create an R or Jupyter Notebook.
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/RNotebook.png">
+
+
+3. (10 pts / 2 hrs) Analyze the problem of contact tracing and create a conceptual model in UML.
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/UML.png">
+
+4. (10 pts / 1 hr) From the Conceptual Model, construct a logical data model expressed as an ERD using IE (Crow's Foot) and a tool of your choice that is in at least BCNF. 
+
+- ERD & URL to its LucidChart diagram: https://lucid.app/lucidchart/614f280e-f6d6-4a87-bd82-e9b3a1f8f161/edit?page=0_0#?folder_id=home&browser=icon
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/ERD.png">
+
+- Using functional dependencies, show that the schema in in at least BCNF
+
+```
+[Person]
+
+PersonId: single valued
+EmployeeId: single valued
+FirstName: single valued
+LastName: single valued
+DOB: single valued
+Gender: single valued
+Address: single valued
+City: single valued
+State: single valued
+Phone: single valued
+Email: single valued
+SMS: single valued
+DateOfStartQuarantine: single valued
+1NF ✔️
+
+(key)A: PersonId
+(non-key)B: EmployeeId
+(non-key)C: FirstName
+(non-key)D: LastName
+(non-key)E: DOB
+(non-key)F: Gender
+(non-key)G: Address
+(non-key)H: City
+(non-key)I: State
+(non-key)J: Phone
+(non-key)K: Email
+(non-key)L: SMS
+(non-key)M: DateOfStartQuarantine
+
+A -> B
+A -> C
+A -> D
+A -> E
+A -> F
+A -> G
+A -> H
+A -> I
+A -> J
+A -> K
+A -> L
+A -> M
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[MedicalProvider]
+
+MedicalProviderId: single valued
+Title: single valued
+FirstName: single valued
+LastName: single valued
+PersonId: single valued
+1NF ✔️
+
+(key)A: MedicalProviderId
+(non-key)B: Title
+(non-key)C: FirstName
+(non-key)D: LastName
+(non-key)E: PersonId
+
+A -> B
+A -> C
+A -> D
+A -> E
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[Hospital]
+
+HospitalId: single valued
+Name: single valued
+Address: single valued
+Phone: single valued
+1NF ✔️
+
+(key)A: HospitalId
+(non-key)B: Name
+(non-key)C: Address
+(non-key)D: Phone
+
+A -> B
+A -> C
+A -> D
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[Symptom]
+
+SymptomId: single valued
+ReportId: single valued
+DateOfSymptomOnset: single valued
+SymptomDetail: single valued
+1NF ✔️
+
+(key)A: SymptomId
+(non-key)B: ReportId
+(non-key)C: DateOfSymptomOnset
+(non-key)D: SymptomDetail
+
+A -> B
+A -> C
+A -> D
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[SelfReport]
+
+ReportId: single valued
+PersonId: single valued
+ReportDate:  single valued
+Detail: single valued
+Temperature: single valued
+ProtectiveBehavior: single valued
+Quarantined: single valued
+1NF ✔️
+
+(key)A: ReportId
+(non-key)B: PersonId
+(non-key)C: ReportDate
+(non-key)D: Detail
+(non-key)E: Temperature
+(non-key)F: ProtectiveBehavior
+(non-key)G: Quarantined
+
+A -> B
+A -> C
+A -> D
+A -> E
+A -> F
+A -> G
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[TestResult]
+
+TestResultId: single valued
+ReportId: single valued
+Description: single valued
+Positive: single valued
+
+(key)A: TestResultId
+(non-key)B: ReportId
+(non-key)C: Description
+(non-key)D: Positive
+
+A -> B
+A -> C
+A -> D
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[Employee]
+
+EmployeeId: single valued
+FirstName: single valued
+LastName: single valued
+Phone: single valued
+1NF ✔️
+
+(key)A: EmployeeId
+(non-key)B: FirstName
+(non-key)C: LastName
+(non-key)D: Phone
+
+A -> B
+A -> C
+A -> D
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[Event]
+
+EventId: single valued
+EventDate: single valued
+Address: single valued
+City: single valued
+State: single valued
+Detail: single valued
+1NF ✔️
+
+(key)A: EventId
+(non-key)B: EventDate
+(non-key)C: Address
+(non-key)D: City
+(non-key)E: State
+(non-key)F: Detail
+
+A -> B
+A -> C
+A -> D
+A -> E
+A -> F
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[SupportiveServices]
+
+SupportiveServicesId: single valued
+Title: single valued
+PersonId: single valued
+1NF ✔️
+
+(key)A: SupportiveServicesId
+(non-key)B: Title
+(non-key)C: PersonId
+
+A -> B
+A -> C
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+
+[Notification]
+
+NotificationId: single valued
+PersonId: single valued
+NotificationType: single valued
+NotificationDate: single valued
+Detail: single valued
+1NF ✔️
+
+(key)A: NotificationId
+(non-key)B: PersonId
+(non-key)C: NotificationType
+(non-key)D: NotificationDate
+(non-key)E: Detail
+
+A -> B
+A -> C
+A -> D
+A -> E
+2NF ✔️
+
+No non-key attribute can decide A(key), so BCNF ✔️
+```
+
+5. (20 pts / 1.5 hrs) Create a set of SQL data definition statements, realize that schema in MySQL by executing the script from the MySQL console.
+```sql
+CREATE TABLE Hospital (
+  HospitalId INT NOT NULL,
+  Name VARCHAR(45),
+  Address VARCHAR(45),
+  Phone VARCHAR(20),
+  PRIMARY KEY (HospitalId)
+)
+COMMENT = 'Health center for connecting with patients and contacts.';
+
+
+CREATE TABLE MedicalProvider (
+  MedicalProviderId INT NOT NULL,
+  Title VARCHAR(20),
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  HospitalId INT NOT NULL,
+  PRIMARY KEY (MedicalProviderId),
+  FOREIGN KEY (HospitalId)
+    REFERENCES Hospital(HospitalId)
+)
+COMMENT = 'Doctor who diagnosis patients.';
+
+
+CREATE TABLE Employee (
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  Phone INT,
+  PRIMARY KEY (EmployeeId)
+)
+COMMENT = 'Employee from health department who is responsible for contacting patients and contact.';
+
+
+CREATE TABLE Person (
+  PersonId INT NOT NULL,
+  MedicalProviderId INT,
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  DOB DATE,
+  Gender ENUM('male', 'female'),
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Phone VARCHAR(45),
+  Email VARCHAR(45),
+  SMS VARCHAR(45),
+  DateOfStartQuarantine DATE,
+  SourceOfInfection VARCHAR(45),
+  RiskLevel INT,
+  PRIMARY KEY (PersonId),
+  FOREIGN KEY (MedicalProviderId)
+    REFERENCES MedicalProvider(MedicalProviderId),
+  FOREIGN KEY (EmployeeId)
+    REFERENCES Employee(EmployeeId)
+)
+COMMENT = 'Either a test positive patient or a potiential patient who contacts with a patient';
+
+
+CREATE TABLE Notification (
+  NotificationId INT NOT NULL,
+  PersonId INT NOT NULL,
+  NotificationType VARCHAR(45),
+  NotificationDate DATE,
+  Detail VARCHAR(45),
+  PRIMARY KEY (NotificationId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person (PersonId)
+)
+COMMENT = 'Both patients and contacts will receive notification based on their health condition.';
+
+
+CREATE TABLE Event (
+  EventId INT NOT NULL,
+  EventDate DATE,
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Detail VARCHAR(45),
+  PRIMARY KEY (EventId)
+)
+COMMENT = 'The event that patients and contacts attend.';
+
+
+CREATE TABLE PersonEvent (
+  PersonId INT NOT NULL,
+  EventId INT NOT NULL,
+  PRIMARY KEY (PersonId, EventId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId),
+  FOREIGN KEY (EventId)
+    REFERENCES Event(EventId)
+);
+
+
+CREATE TABLE SupportiveServices (
+  SupportiveServicesId INT NOT NULL,
+  Title VARCHAR(45),
+  PRIMARY KEY (SupportiveServicesId)
+)
+COMMENT = 'Both patients and contacts will get support services during their quarantine if they face any inconvenience.';
+
+
+CREATE TABLE ServicesPerson (
+  SupportiveServicesId INT NOT NULL,
+  PersonId INT NOT NULL,
+  PRIMARY KEY (SupportiveServicesId, PersonId),
+  FOREIGN KEY (SupportiveServicesId)
+    REFERENCES SupportiveServices(SupportiveServicesId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+);
+
+
+CREATE TABLE SelfReport (
+  ReportId INT NOT NULL,
+  PersonId INT NOT NULL,
+  ReportDate DATE,
+  Temperature INT,
+  ProtectiveBehavior VARCHAR(45),
+  Quarantined TINYINT,
+  PRIMARY KEY (ReportId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+)
+COMMENT = 'Daily data report such as temperature data, contact data.';
+
+
+CREATE TABLE TestResult (
+  TestResultId INT NOT NULL,
+  ReportId INT NOT NULL,
+  Description VARCHAR(45),
+  Positive TINYINT,
+  PRIMARY KEY (TestResultId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'If the test result is positive, which means this patient / contacts is diagnosed with Covid-19.';
+
+
+CREATE TABLE Symptom (
+  SymptomId INT NOT NULL,
+  ReportId INT NOT NULL,
+  DateOfSymptomOnset DATE,
+  SymptomDetail VARCHAR(45),
+  PRIMARY KEY (SymptomId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'Symptom description.';
+
+```
+- Table [Employee] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/13.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/32.png">
+
+- Table [Event] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/12.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/31.png">
+
+- Table [Hospital] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/11.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/30.png">
+
+- Table [MedicalProvider] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/10.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/29.png">
+
+- Table [Notification] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/9.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/28.png">
+
+- Table [Person] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/8.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/27.png">
+
+- Table [PersonEvent] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/7.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/26.png">
+
+- Table [SelfReport] successfully created 
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/6.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/25.png">
+
+- Table [ServicesPerson] successfully created
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/5.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/24.png">
+
+- Table [SupportiveServices] successfully created
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/4.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/23.png">
+
+- Table [Symptom] successfully created
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/3.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/22.png">
+
+- Table [TestResult] successfully created
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/2.png">
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/21.png">
+
+6. (20 pts / 2 hrs) Work as a group to populate the tables with test data.
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/Employee.png">
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/Hospital.png">
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/MedicalProvider.png">
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/SelfReport.png">
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/Symptom.png">
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/TestResult.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/EventTest.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/NotificationTest.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/PersonEventTest.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/PersonTest.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/ServicesPersonTest.png">
+
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/SupportiveServicesTest.png">
+
+
+7. (20 pts / 1 hrs) Define and execute at least five queries that demonstrate that your database is working.
+
+```sql
+-- Query 1: find the names and addresses of hospital which have more than 5 person and how much persons they have.
+-- a join of at least three tables
+-- a group by with a having clause
+SELECT
+  h.Name,
+  h.Address,
+  COUNT(p.PersonId) personCount
+FROM Hospital h
+JOIN MedicalProvider m
+ON m.HospitalId=h.HospitalId
+JOIN Person p
+ON p.MedicalProviderId=m.MedicalProviderId
+GROUP BY h.name
+HAVING personCount>5;
+
+
+-- Query 2: find the numbers of male and female persons.
+-- an advanced query mechanisms SELECT CASE/WHEN
+SELECT
+  SUM(CASE WHEN Gender='male' THEN 1 ELSE 0 END) maleCount,
+  SUM(CASE WHEN Gender='female' THEN 1 ELSE 0 END) femaleCount
+FROM Person;
+
+
+
+-- Query 3: find the reports starting from April 2020 which have symptom but test negative, ordering by latest date
+-- a subquery
+-- a complex search criterion using AND
+SELECT *
+FROM SelfReport r
+WHERE r.ReportDate >= '2020-04-01'
+AND EXISTS (SELECT 1 FROM Symptom s WHERE s.ReportId=r.ReportId)
+AND r.ReportId NOT IN (SELECT ReportId FROM TestResult WHERE Positive=True)
+ORDER BY r.ReportDate DESC;
+
+
+
+
+-- Query 4: find the age range distribution of persons.
+-- an advanced query mechanisms SELECT CASE/WHEN
+SELECT 
+  CASE WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 20 THEN '<20'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 30 THEN '20-29'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 40 THEN '30-39'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 50 THEN '40-49'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 60 THEN '50-59'
+     ELSE '>60' END AS age,
+     COUNT(PersonId) persons
+FROM Person
+GROUP BY age
+ORDER BY FIELD(age, '<20', '20-29', '30-39', '40-49', '50-59', '>60');
+
+
+
+
+-- Query 5:Find the names attend Music event.
+-- join of at least 3 tables.
+-- contain a complex search criterion using LIKE.
+SELECT distinct Person.FirstName, Person.LastName
+ FROM Person
+ JOIN PersonEvent ON PersonEvent.PersonId = Person.PersonId
+ JOIN Event ON Event.EventId = PersonEvent.EventId
+ WHERE Event.Detail LIKE "%Music%";
+
+
+
+-- Query 6: Find the number of Male who tests positive.
+-- join of at least 3 tables.
+-- contain a complex search criterion using AND.
+SELECT COUNT(*) AS Number
+FROM Person
+JOIN SelfReport ON SelfReport.PersonId = Person.PersonId
+JOIN TestResult ON TestResult.ReportId = SelfReport.ReportId
+WHERE TestResult.Positive = 'True'
+AND Person.Gender = 'Male';
+
+
+
+-- Query 7: List the Service name and the number of that Service, which is greater than 2. 
+-- group by with a having clause
+SELECT SupportiveServices.Title, COUNT(ServicesPerson.SupportiveServicesId) AS Number
+FROM ServicesPerson
+JOIN SupportiveServices ON ServicesPerson.SupportiveServicesId = SupportiveServices.SupportiveServicesId
+GROUP BY ServicesPerson.SupportiveServicesId
+HAVING Number >2;
+
+
+
+Query 1:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query1.png">
+
+Query 2:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query2.png">
+
+Query 3:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query3.png">
+
+Query 4:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query4.png">
+
+Query 5:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query5.png">
+
+Query 6:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query6.png">
+
+Query 7:
+<img src="https://raw.githubusercontent.com/Simin-Zhang/Database/main/Query7.png">
+
+
+```
+
+```{R}
+# load libraries
+library(DBI)
+library(odbc)
+library(ggplot2)
+
+# connect to mysql
+con <- DBI::dbConnect(odbc::odbc(),
+                      Driver   = "MySQL",
+                      Server   = "cs5200.cerugoc9p5ux.us-east-1.rds.amazonaws.com",
+                      Database = "practicum-i",
+                      UID      = "admin",
+                      PWD      = "cs5200db",
+                      Port     = 3306)
+
+# build query
+query <- dbSendQuery(con, "SELECT 
+  CASE WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 20 THEN '<20'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 30 THEN '20-29'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 40 THEN '30-39'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 50 THEN '40-49'
+     WHEN (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'))) < 60 THEN '50-59'
+     ELSE '>60' END AS age,
+     COUNT(PersonId) persons
+FROM Person
+GROUP BY age
+ORDER BY FIELD(age, '<20', '20-29', '30-39', '40-49', '50-59', '>60')")
+
+# fetch data
+df <- dbFetch(query)
+
+# lock the order
+df$age <- factor(df$age, levels = df$age)
+
+# plot
+ggplot(df, aes(x=age, y=persons)) +
+  geom_col(data=df) +
+  scale_y_continuous(limits=c(0,20))
+```
+
+![BarChart_AgeRangeDistribution](https://zacw.rstudio.cloud/0469cf272cf741b183c40cf2932686cf/file_show?path=%2Fcloud%2Fproject%2FBarChart_AgeRangeDistribution.png)
+
+<img src="https://raw.githubusercontent.com/yimanliu0/database/master/image/chart.png">
+

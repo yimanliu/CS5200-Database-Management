@@ -1,0 +1,13 @@
+"0",""
+"0","# load the dimension tables"
+"0",""
+"0","journal_dim_df <- data.frame("
+"0","  journal_issn = journal_issn_result,"
+"0","  volume = art_volumes,"
+"0","  issue = art_issues,"
+"0","  pub_date_id = journalpubdatedim_result,"
+"0","  cited_medium = art_cited_medium"
+"0",")"
+"2","Error in data.frame(journal_issn = journal_issn_result, volume = art_volumes,  : 
+  object 'journal_issn_result' not found
+"

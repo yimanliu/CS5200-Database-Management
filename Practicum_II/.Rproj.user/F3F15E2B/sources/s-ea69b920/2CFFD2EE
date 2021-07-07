@@ -1,0 +1,25 @@
+{
+    "id": "2CFFD2EE",
+    "path": "/cloud/project/practicum_ii_zac.Rmd",
+    "project_path": "practicum_ii_zac.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1605580734990.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "9,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1605580707,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1605580707,
+    "read_only": false,
+    "read_only_alternatives": []
+}

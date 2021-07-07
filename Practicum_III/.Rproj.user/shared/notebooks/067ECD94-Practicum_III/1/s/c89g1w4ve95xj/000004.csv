@@ -1,0 +1,4 @@
+"0","-- Simple query for number of authors in seasons when article published by using AuthorFact
+SELECT pub_period, COUNT(*) as numOfAuthor
+FROM AuthorFact
+GROUP BY pub_period;"

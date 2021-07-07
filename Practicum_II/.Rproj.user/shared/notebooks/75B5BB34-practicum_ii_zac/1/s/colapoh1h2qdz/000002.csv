@@ -1,0 +1,9 @@
+"0","CREATE TABLE IF NOT EXISTS person (
+  nconst VARCHAR(15) NOT NULL,
+  primaryName VARCHAR(45),
+  birthYear INT,
+  deathYear INT,
+  age INT,
+  numOfMoviesAppeared INT,
+  PRIMARY KEY (nconst)
+);"

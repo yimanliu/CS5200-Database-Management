@@ -1,0 +1,150 @@
+CREATE TABLE Hospital (
+  HospitalId INT NOT NULL,
+  Name VARCHAR(45),
+  Address VARCHAR(45),
+  Phone VARCHAR(20),
+  PRIMARY KEY (HospitalId)
+)
+COMMENT = 'Health center for connecting with patients and contacts.';
+
+
+CREATE TABLE MedicalProvider (
+  MedicalProviderId INT NOT NULL,
+  Title VARCHAR(20),
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  HospitalId INT NOT NULL,
+  PRIMARY KEY (MedicalProviderId),
+  FOREIGN KEY (HospitalId)
+    REFERENCES Hospital(HospitalId)
+)
+COMMENT = 'Doctor who diagnosis patients.';
+
+
+CREATE TABLE Employee (
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  Phone INT,
+  PRIMARY KEY (EmployeeId)
+)
+COMMENT = 'Employee from health department who is responsible for contacting patients and contact.';
+
+
+CREATE TABLE Person (
+  PersonId INT NOT NULL,
+  MedicalProviderId INT,
+  EmployeeId INT NOT NULL,
+  FirstName VARCHAR(20),
+  LastName VARCHAR(20),
+  DOB DATE,
+  Gender ENUM('male', 'female'),
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Phone VARCHAR(45),
+  Email VARCHAR(45),
+  SMS VARCHAR(45),
+  DateOfStartQuarantine DATE,
+  SourceOfInfection VARCHAR(45),
+  RiskLevel INT,
+  PRIMARY KEY (PersonId),
+  FOREIGN KEY (MedicalProviderId)
+    REFERENCES MedicalProvider(MedicalProviderId),
+  FOREIGN KEY (EmployeeId)
+    REFERENCES Employee(EmployeeId)
+)
+COMMENT = 'Either a test positive patient or a potiential patient who contacts with a patient';
+
+
+CREATE TABLE Notification (
+  NotificationId INT NOT NULL,
+  PersonId INT NOT NULL,
+  NotificationType VARCHAR(45),
+  NotificationDate DATE,
+  Detail VARCHAR(45),
+  PRIMARY KEY (NotificationId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person (PersonId)
+)
+COMMENT = 'Both patients and contacts will receive notification based on their health condition.';
+
+
+CREATE TABLE Event (
+  EventId INT NOT NULL,
+  EventDate DATE,
+  Address VARCHAR(45),
+  City VARCHAR(45),
+  State VARCHAR(45),
+  Detail VARCHAR(45),
+  PRIMARY KEY (EventId)
+)
+COMMENT = 'The event that patients and contacts attend.';
+
+
+CREATE TABLE PersonEvent (
+  PersonId INT NOT NULL,
+  EventId INT NOT NULL,
+  PRIMARY KEY (PersonId, EventId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId),
+  FOREIGN KEY (EventId)
+    REFERENCES Event(EventId)
+);
+
+
+CREATE TABLE SupportiveServices (
+  SupportiveServicesId INT NOT NULL,
+  Title VARCHAR(45),
+  PRIMARY KEY (SupportiveServicesId)
+)
+COMMENT = 'Both patients and contacts will get support services during their quarantine if they face any inconvenience.';
+
+
+CREATE TABLE ServicesPerson (
+  SupportiveServicesId INT NOT NULL,
+  PersonId INT NOT NULL,
+  PRIMARY KEY (SupportiveServicesId, PersonId),
+  FOREIGN KEY (SupportiveServicesId)
+    REFERENCES SupportiveServices(SupportiveServicesId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+);
+
+
+CREATE TABLE SelfReport (
+  ReportId INT NOT NULL,
+  PersonId INT NOT NULL,
+  ReportDate DATE,
+  Temperature INT,
+  ProtectiveBehavior VARCHAR(45),
+  Quarantined TINYINT,
+  PRIMARY KEY (ReportId),
+  FOREIGN KEY (PersonId)
+    REFERENCES Person(PersonId)
+)
+COMMENT = 'Daily data report such as temperature data, contact data.';
+
+
+CREATE TABLE TestResult (
+  TestResultId INT NOT NULL,
+  ReportId INT NOT NULL,
+  Description VARCHAR(45),
+  Positive TINYINT,
+  PRIMARY KEY (TestResultId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'If the test result is positive, which means this patient / contacts is diagnosed with Covid-19.';
+
+
+CREATE TABLE Symptom (
+  SymptomId INT NOT NULL,
+  ReportId INT NOT NULL,
+  DateOfSymptomOnset DATE,
+  SymptomDetail VARCHAR(45),
+  PRIMARY KEY (SymptomId),
+  FOREIGN KEY (ReportId)
+    REFERENCES SelfReport(ReportId)
+)
+COMMENT = 'Symptom description.';

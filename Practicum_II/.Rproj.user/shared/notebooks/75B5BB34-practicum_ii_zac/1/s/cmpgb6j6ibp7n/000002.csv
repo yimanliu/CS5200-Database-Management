@@ -1,0 +1,10 @@
+"0","CREATE TABLE IF NOT EXISTS primaryProfession (
+  nconst VARCHAR(15) NOT NULL,
+  professionType VARCHAR(45) NOT NULL,
+  PRIMARY KEY (nconst, professionType),
+  CONSTRAINT FK_person_primaryProfession
+    FOREIGN KEY (nconst)
+    REFERENCES person (nconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

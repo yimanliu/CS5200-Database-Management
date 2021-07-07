@@ -1,0 +1,11 @@
+"0","CREATE TABLE If NOT EXISTS ArticleJournal (
+  article_id        NUMERIC NOT NULL,
+  journal_issn      TEXT    NOT NULL,
+  volume            TEXT    NOT NULL,
+  issue             TEXT    NOT NULL,
+  pub_date          DATE    NOT NULL,
+  cited_medium      TEXT    CHECK(cited_medium IN ('Internet', 'Print')),
+  PRIMARY KEY (article_id, journal_issn),
+  FOREIGN KEY(article_id)   REFERENCES Article(pmid),
+  FOREIGN KEY(journal_issn) REFERENCES Journal(issn)
+);"

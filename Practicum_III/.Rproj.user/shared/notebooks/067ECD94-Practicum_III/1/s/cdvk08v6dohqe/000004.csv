@@ -1,0 +1,2 @@
+"0","names=c('2012-Q1', '2012-Q2', '2012-Q3', '2012-Q4', '2013-Q1', '')"
+"0","text(pub_df, labels=names, cex=0.7, pos=3, col=""blue"")"

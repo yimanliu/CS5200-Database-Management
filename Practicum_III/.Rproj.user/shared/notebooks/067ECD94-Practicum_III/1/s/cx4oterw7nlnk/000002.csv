@@ -1,0 +1,4 @@
+"0","
+-- drop the tables if they already exist
+DROP TABLE IF EXISTS JournalPubDateDim;
+"

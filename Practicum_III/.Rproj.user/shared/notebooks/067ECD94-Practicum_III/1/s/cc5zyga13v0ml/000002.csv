@@ -1,0 +1,2 @@
+"0","library(DBI)"
+"0","con <- dbConnect(RSQLite::SQLite(), ""pubmed_normalized.sqlite"")"

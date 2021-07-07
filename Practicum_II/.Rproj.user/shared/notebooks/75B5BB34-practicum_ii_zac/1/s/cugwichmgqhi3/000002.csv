@@ -1,0 +1,17 @@
+"0","CREATE TABLE IF NOT EXISTS episode (
+  tconst VARCHAR(15) NOT NULL,
+  parentTconst VARCHAR(15) NULL,
+  seasonNumber INT NULL,
+  episodeNumber INT NULL,
+  PRIMARY KEY (tconst),
+  CONSTRAINT FK_movieTitle_episode
+    FOREIGN KEY (tconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT FK_movieTitle_episode2
+    FOREIGN KEY (parentTconst)
+    REFERENCES movieTitle (tconst)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+);"

@@ -1,0 +1,7 @@
+"0","-- This is not efficient for OLAP queries. 
+SELECT count(Author.author_id)
+from Author
+    INNER JOIN ArticleAuthor ON Author.author_id = ArticleAuthor.author_id
+    INNER JOIN Article ON ArticleAuthor.article_id = Article.pmid
+    INNER JOIN ArticleJournal ON ArticleJournal.article_id = Article.pmid
+WHERE substr(ArticleJournal.pub_date,1,8) = '2012 Jan' OR substr(ArticleJournal.pub_date,1,8) = '2012-Feb' OR substr(ArticleJournal.pub_date,1,8) = '2012-Mar';"

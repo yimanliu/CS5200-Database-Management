@@ -1,0 +1,7 @@
+"0","# get the data from table to dataframe"
+"0",""
+"0","articledatedim_article_date_id <-dbGetQuery(con,""SELECT article_date_id FROM ArticleDateDim"")"
+"0","articledatedim_quarter<-dbGetQuery(con,""SELECT quarter AS article_pub_quater  FROM ArticleDateDim"")"
+"0","articledatedim_year<-dbGetQuery(con,""SELECT year AS article_pub_year  FROM ArticleDateDim"")"
+"0",""
+"0","print(articledatedim_article_date_id)"
